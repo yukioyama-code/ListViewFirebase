@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
+import com.google.android.material.progressindicator.AnimatorDurationScaleProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -60,11 +61,17 @@ public class MainActivity extends AppCompatActivity {
         listaPessoas.setAdapter(adapter);
 
         listaPessoas.setOnItemClickListener(new EscutadorCliqueLista());
+
+        EscutadorCliqueLista el = new EscutadorCliqueLista();
+
+        listaPessoas.setOnItemClickListener( el );
+        listaPessoas.setOnItemLongClickListener( el );
+
     }
 
     private class EscutadorBotaoAdicionar implements View.OnClickListener{
         @Override
-fgd
+
         public void onClick(View view){
             String nome, email;
 
@@ -113,7 +120,7 @@ fgd
         }
     }
 
-    private class EscutadorCliqueLista implements AdapterView.OnItemClickListener {
+    private class EscutadorCliqueLista implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -123,7 +130,24 @@ fgd
 
             Toast.makeText(getApplicationContext(), "Nome: " + c.getNome() + "\nEmail: " + c.getEmail(), Toast.LENGTH_SHORT).show();
         }
+
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Contato c = adapter.getItem(i);
+
+            String chave = c.getChave();
+
+            DatabaseReference conteudo26 = BD.child("cont26listacontatos");
+            DatabaseReference m = conteudo26.child(chave);
+            m.setValue(null);
+
+           return true;
+        }
+
+
+
     }
+
+
 
 
 
